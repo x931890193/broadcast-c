@@ -21,7 +21,7 @@ void *sender() {
     int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock_fd < 0) {
         perror("socket error");
-        return -1;
+        return NULL;
     }
     //2.开启广播
     int on = 1;
@@ -71,7 +71,7 @@ void *receiver() {
     int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock_fd < 0) {
         perror("socket error");
-        return -1;
+        return NULL;
     }
     //设置端口地址复用
     int on = 1;
@@ -94,12 +94,11 @@ void *receiver() {
         goto recv_err;
     }
 
-    //3.接收数据
-    char buffer[1024] = {0};
-    struct sockaddr_in send_addr;
-    socklen_t len = sizeof(send_addr);
-
     while (1) {
+        //3.接收数据
+        char buffer[1024] = {0};
+        struct sockaddr_in send_addr;
+        socklen_t len = sizeof(send_addr);
         ret = recvfrom(sock_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &send_addr, &len);
         if (ret < 0) {
             perror("recvfrom error");
