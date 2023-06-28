@@ -21,7 +21,7 @@ void *sender() {
     int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock_fd < 0) {
         perror("socket error");
-        return NULL;
+        return (void *) -1;
     }
     //2.开启广播
     int on = 1;
@@ -71,7 +71,7 @@ void *receiver() {
     int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock_fd < 0) {
         perror("socket error");
-        return NULL;
+        return (void *) -1;
     }
     //设置端口地址复用
     int on = 1;
