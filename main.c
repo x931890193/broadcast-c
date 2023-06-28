@@ -46,7 +46,7 @@ void *sender() {
             perror("get hostname error");
             goto err;
         }
-        char *to_send = (char *) malloc(1);
+        char *to_send = (char *) malloc(1024);
         time(&now);
         strftime(time_str, 128, "%Y-%m-%d %H:%M:%S", localtime(&now));
         sprintf(to_send, "{\"host\": \"%s, \"time: \"%s\", \"from\": \"C\"}", host_buffer, time_str);
