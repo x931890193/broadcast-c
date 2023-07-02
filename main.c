@@ -71,7 +71,7 @@ void *sender() {
         strftime(time_str, 128, "%Y-%m-%d %H:%M:%S", localtime(&now));
 
         float temp = get_temperature();
-        sprintf(to_send, "\"{\"host\": \"%s\", \"time: \"%s\", \"from\": \"C\", \"temp\": \"%.2f\"}\"", host_buffer, time_str, temp);
+        sprintf(to_send, "{\"host\": \"%s\", \"time\": \"%s\", \"from\": \"C\", \"temp\": \"%.2f\"}", host_buffer, time_str, temp);
         // 3.发送数据
         ret = sendto(sock_fd, to_send, strlen(to_send), 0, (struct sockaddr *) &dest_addr, sizeof(dest_addr));
         free(to_send);
