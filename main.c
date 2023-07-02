@@ -15,6 +15,27 @@
 #define BROADCAST_PORT 4000
 #define SendSleepTime 3
 
+float get_temperature();
+
+float get_temperature() {
+    FILE *fp;
+    char buf[128];
+    char temperature[10];
+    float temp;
+    fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
+    if (fp == NULL) {
+        printf("open file error\n");
+        return -1;
+    }
+    fgets(buf, sizeof(buf), fp);
+    strncpy(temperature, buf, 2);
+    temperature[2] = '.';
+    strncpy(temperature + 3, buf + 2, 3);
+    temp = atof(temperature);
+    fclose(fp);
+    return temp;
+}
+
 void *sender() {
     //1.创建udp套接字
     int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -48,7 +69,9 @@ void *sender() {
         char *to_send = (char *) malloc(1024);
         time(&now);
         strftime(time_str, 128, "%Y-%m-%d %H:%M:%S", localtime(&now));
-        sprintf(to_send, "{\"host\": \"%s\", \"time: \"%s\", \"from\": \"C\"}", host_buffer, time_str);
+
+        float temp = get_temperature();
+        sprintf(to_send, "{\"host\": \"%s\", \"time: \"%s\", \"from\": \"C\", \"temp\": \"%.2f\"}", host_buffer, time_str, temp);
         // 3.发送数据
         ret = sendto(sock_fd, to_send, strlen(to_send), 0, (struct sockaddr *) &dest_addr, sizeof(dest_addr));
         free(to_send);
