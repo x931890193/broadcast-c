@@ -65,6 +65,7 @@ void *sender() {
         if (ret < 0) {
             perror("get hostname error");
             sleep(5);
+            continue;
 //            goto err;
         }
         char *to_send = (char *) malloc(1024);
