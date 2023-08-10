@@ -64,7 +64,8 @@ void *sender() {
         ret = gethostname(host_buffer, sizeof(host_buffer));
         if (ret < 0) {
             perror("get hostname error");
-            goto err;
+            sleep(5);
+//            goto err;
         }
         char *to_send = (char *) malloc(1024);
         time(&now);
@@ -77,7 +78,8 @@ void *sender() {
         free(to_send);
         if (ret < 0) {
             perror("sendto error");
-            goto err;
+            sleep(5);
+//            goto err;
         }
         sleep(SendSleepTime);
     }
@@ -124,7 +126,9 @@ void *receiver() {
         ret = recvfrom(sock_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &send_addr, &len);
         if (ret < 0) {
             perror("recvfrom error");
-            goto recv_err;
+//            goto recv_err;
+            sleep(5);
+            continue;
         }
         char * ipString = inet_ntoa(send_addr.sin_addr);
 
